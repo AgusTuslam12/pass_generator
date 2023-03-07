@@ -30,55 +30,6 @@ function result(hash){
 }
 
 
-function generatePassword(){
-     const lowerAlpabet = "abcdefghijklmnopqrstuvwxyz"
-     const upperAlpabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-     const numeric = "0123456789"
-     const symbol = "*#@!"
-	 let passwordLength = 12;
-
-    const data = lowerAlpabet + upperAlpabet + numeric + symbol
-    let generator = '';
-
-    for(let index = 0; index < passwordLength; index++){
-        generator += data[~~(Math.random() * data.length)];
-    }
-    return generator
-}
-
-function crypt(){
-	const newPassword = generatePassword(passwordLength.value);
-	document.getElementById('password').value = newPassword;
-	var salt;
-	if($("#salt").val().length != 0){
-		salt = $("#salt").val();
-	}else{
-		try{
-            salt = bcrypt.gensalt($("#rounds").val());
-		}catch(err){
-                	alert(err);
-                	return;
-		}
-		$("#salt").val(salt);
-	}
-        try{
-           	$("#progressbar").progressbar({ value: 0 });
-		bcrypt.hashpw($("#password").val(), $("#salt").val(), result, function() {
-                	var value = $('#progressbar').progressbar( "option", "value" );
-                    	$('#progressbar').progressbar({ value: value + 1 });
-                });
-        }catch(err){
-                alert(err);
-                return;
-        }
-}
-
-
-function reset(){
-    document.getElementById('password').value ='';
-    document.getElementById('hash').value = '';
-    document.getElementById('salt').value = '';
-}
 
 </script>
 <style type="text/css">

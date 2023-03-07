@@ -9,10 +9,11 @@ let copyhash = document.querySelector(".hash-pass .copy-hash")
 let passwordLength = 12;
 
 function generatePassword(){
-     const lowerAlpabet = "abcdefghijklmnopqrstuvwxyz"
-     const upperAlpabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-     const numeric = "0123456789"
-     const symbol = "*#@!"
+  const lowerAlpabet = "abcdeghijkmnpqrstuvwxyz"
+  const upperAlpabet = "ABCDEGHJKLMNPQRSTUVWXYZ"
+  const numeric = "23456789"
+  const symbol = "*#@!"
+  let passwordLength = 12;
 
     const data = lowerAlpabet + upperAlpabet + numeric + symbol
     let generator = '';
@@ -23,38 +24,31 @@ function generatePassword(){
     return generator
 }
 
-function getPassword(){
-    const newPassword = generatePassword(passwordLength.value);
-    password.value = newPassword
-
-    // document.getElementById('hash').innerHTML = CryptoJS.MD5(newPassword);
-
-    var crypt = {
-        // (B1) THE SECRET KEY
-        secret : "CIPHERKEY",
-  
-        // (B2) ENCRYPT
-        encrypt : clear => {
-          var cipher = CryptoJS.AES.encrypt(clear, crypt.secret);
-          return cipher.toString();
-        },
-  
-        // (B3) DECRYPT
-        decrypt : cipher => {
-          var decipher = CryptoJS.AES.decrypt(cipher, crypt.secret);
-          return decipher.toString(CryptoJS.enc.Utf8);
+function crypt(){
+	const newPassword = generatePassword(passwordLength.value);
+	document.getElementById('password').value = newPassword;
+	var salt;
+	if($("#salt").val().length != 0){
+		salt = $("#salt").val();
+	}else{
+		try{
+            salt = bcrypt.gensalt($("#rounds").val());
+		}catch(err){
+                	alert(err);
+                	return;
+		}
+		$("#salt").val(salt);
+	}
+        try{
+           	$("#progressbar").progressbar({ value: 0 });
+		bcrypt.hashpw($("#password").val(), $("#salt").val(), result, function() {
+                	var value = $('#progressbar').progressbar( "option", "value" );
+                    	$('#progressbar').progressbar({ value: value + 1 });
+                });
+        }catch(err){
+                alert(err);
+                return;
         }
-      };
-
-      if(newPassword){
-        var cipher = crypt.encrypt(newPassword)
-        hash.value = cipher
-        var decipher = crypt.decrypt(cipher);
-        decrypt.value = decipher
-
-      }else{
-        alert('Password is Missing')
-    }
 }
 
 //copy passInput's value on copyIcon click
@@ -69,10 +63,9 @@ copyIcon.addEventListener("click", () => {
     copyhash.classList.replace("uil-copy", "uil-file-check-alt"); //replace icon
   });
 
-// function reset(){
-//     document.getElementById('password').value ='';
-//     document.getElementById('hash').value = '';
-//     document.getElementById('decrypt').value = '';
-// }
 
-
+  function reset(){
+    document.getElementById('password').value ='';
+    document.getElementById('hash').value = '';
+    document.getElementById('salt').value = '';
+}
