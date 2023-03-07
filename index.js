@@ -12,7 +12,7 @@ function generatePassword(){
   const lowerAlpabet = "abcdeghijkmnpqrstuvwxyz"
   const upperAlpabet = "ABCDEGHJKLMNPQRSTUVWXYZ"
   const numeric = "23456789"
-  const symbol = "*#@!"
+  const symbol = "*#@!!@#*"
   let passwordLength = 12;
 
     const data = lowerAlpabet + upperAlpabet + numeric + symbol
