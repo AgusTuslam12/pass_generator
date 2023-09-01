@@ -25,6 +25,9 @@ function generatePassword(){
 }
 
 function crypt(){
+  document.getElementById('password').value ='';
+    document.getElementById('hash').value = '';
+    document.getElementById('salt').value = '';
 	const newPassword = generatePassword(passwordLength.value);
 	document.getElementById('password').value = newPassword;
 	var salt;
@@ -64,8 +67,8 @@ copyIcon.addEventListener("click", () => {
   });
 
 
-  function reset(){
-    document.getElementById('password').value ='';
-    document.getElementById('hash').value = '';
-    document.getElementById('salt').value = '';
-}
+//   function reset(){
+//     document.getElementById('password').value ='';
+//     document.getElementById('hash').value = '';
+//     document.getElementById('salt').value = '';
+// }
